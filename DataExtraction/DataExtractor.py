@@ -3,10 +3,14 @@ from Bio import Entrez
 import os
 import time
 
-main_directory = os.getenv("VIRUS_DIR_PATH") 
+main_directory = os.getenv("VIRUS_DIR_PATH")
+ouput_file = os.path().join(main_directory, "pubmed_out.txt")
+
 #--- Requerimientos básicos de la API de pubmed (NCBI)
 Entrez.api_key = os.getenv("NCBI_API_KEY")
 Entrez.email = os.getenv("MY_EMAIL")
+os.makedirs(main_directory, exist_ok=True)
+
 
 
 # -- Consulta
