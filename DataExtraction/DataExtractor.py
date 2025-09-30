@@ -4,7 +4,7 @@ import os
 import time
 
 main_directory = os.getenv("VIRUS_DIR_PATH")
-ouput_file = os.path().join(main_directory, "pubmed_out.txt")
+output_file = os.path.join(main_directory, "pubmed_out.txt")
 
 #--- Requerimientos básicos de la API de pubmed (NCBI)
 Entrez.api_key = os.getenv("NCBI_API_KEY")
@@ -28,5 +28,22 @@ print(f"Total de artículos encontrados: {len(id_list)}")
 #-- Descarga de consulta (Efetch) en bloques de 100
 
 batch_size =  100
+
+with open(output_file, 'w', encoding="utf-8") as out:
+    for start in range(0, len(id_list), batch_size):
+        end = min(start + batch_size, len(id_list))
+        batch_id = id_list[start:end]
+        handle = Entrez.efetch(db='Pubmed', id=batch_id, rettype="medline", retmode="text")
+        data = handle.read() 
+        out.write(data)
+        handle.close()
+        print(f"Artículos guardados {start+1} a {end}")
+        time.sleep(1)
+
+
+print(f"\nArchivo guardado en: {output_file}")
+
+        
+
 
 
